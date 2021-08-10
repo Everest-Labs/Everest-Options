@@ -9,7 +9,6 @@ import "./standards/Address.sol";
 import "./standards/ERC20.sol";
 import "./standards/Ownable.sol";
 import "./standards/Address.sol";
-import "./standards/Address.sol";
 
 contract EverestStandardOracle is Ownable {
     uint256 public _Expired;
