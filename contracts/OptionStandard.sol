@@ -49,7 +49,7 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStanda
         }
     }
     
-    function withdraw(uint256 _amount) public {
+    function claim(uint256 _amount) public {
         uint256 totalAmount = totalSupply();
         uint256 fair = _amount.mul(token.balanceOf(address(this))).div(totalAmount);
         if (block.timestamp >= block.timestamp.add(ContractPeriod)) {
