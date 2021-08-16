@@ -12,9 +12,9 @@ import "./EverestStandardOracle.sol";
 contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStandardOracle {
     using SafeMath for uint256;
     IERC20 public token;
-    string public ticker;
+    string private ticker;
     address public Opposite;
-    address public BurnAddress;
+    address private BurnAddress;
     uint256 public constant AdjustedPeriod = 7 days;
     uint256 public constant ContractPeriod = 30 days;
     
