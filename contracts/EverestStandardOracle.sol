@@ -10,18 +10,9 @@ import "./standards/ERC20.sol";
 import "./standards/Ownable.sol";
 
 contract EverestStandardOracle is Ownable {
-    uint256 public _Consensus;
-    
-    event ValueChanged(uint256 Consensus);
+    bool public _FinalResult;
 
-    function ProvideData(uint256 Consensus) public onlyOwner {
-        if (Consensus == 0 || Consensus == 1) {
-            _Consensus = Consensus;
-            emit ValueChanged(Consensus);   
-        }
-    }
-    
-    function retrieve() public view returns (uint256) {
-        return _Consensus;
+    function Oracle_Consensus(bool FinalResult) public onlyOwner {
+            _FinalResult = FinalResult;
     }
 }
