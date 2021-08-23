@@ -12,22 +12,28 @@ import "./EverestStandardOracle.sol";
 contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStandardOracle {
     using SafeMath for uint256;
     IERC20 public token;
-    string private ticker;
+    string private asset;
+    string private expiry;
+    uint256 private OracleFee;
+    uint256 public InitialBlock;
     address public Opposite;
     address private BurnAddress;
-    uint256 public constant AdjustedPeriod = 7 days;
-    uint256 public constant ContractPeriod = 30 days;
+    uint256 public constant AdjustedPeriod = 5 minutes;
+    uint256 public constant ContractPeriod = 10 minutes;
     
     event AddressChanged(address Opposite);
     
-    constructor(IERC20 _token, string memory _ticker) public {
+    constructor(IERC20 _token, string memory _asset, string memory _expiry, uint256 _OracleFee) public {
         token = _token;
-        ticker = _ticker;
+        asset = _asset;
+        expiry = _expiry;
+        OracleFee = _OracleFee;
+        InitialBlock = block.timestamp;
         BurnAddress = 0x0000000000000000000000000000000000000000;
     }
 
     function deposit(uint256 _amount) public {
-        if (block.timestamp <= block.timestamp.add(AdjustedPeriod)) {
+        if (block.timestamp < InitialBlock.add(AdjustedPeriod)) {
             _mint(msg.sender, _amount);
             token.transferFrom(msg.sender, address(this), _amount);
         }
@@ -41,9 +47,9 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStanda
     }
     
     function lost() public onlyOwner {
-        uint256 OwnerFee = token.balanceOf(address(this)).div(40);
+        uint256 OwnerFee = token.balanceOf(address(this)).div(OracleFee);
         uint256 totalToken = token.balanceOf(address(this)).sub(OwnerFee);
-        if (_Consensus == 1) {
+        if (_FinalResult == true) {
             token.transfer(msg.sender, OwnerFee);
             token.transfer(Opposite, totalToken);
         }
@@ -52,13 +58,17 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStanda
     function claim(uint256 _amount) public {
         uint256 totalAmount = totalSupply();
         uint256 fair = _amount.mul(token.balanceOf(address(this))).div(totalAmount);
-        if (block.timestamp >= block.timestamp.add(ContractPeriod)) {
+        if (block.timestamp > InitialBlock.add(ContractPeriod)) {
             _burn(msg.sender, _amount);
             token.transfer(msg.sender, fair);
         }
     }
     
-    function TickerExpiry() public view returns (string memory) {
+    function Asset() public view returns (string memory) {
         return asset;
+    }
+    
+    function Expiry() public view returns (string memory) {
+        return expiry;
     }
 }
