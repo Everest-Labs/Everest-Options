@@ -7,7 +7,7 @@ import "./standards/SafeMath.sol";
 import "./standards/Address.sol";
 import "./standards/ERC20.sol";
 import "./standards/Ownable.sol";
-import "./EverestStandardOracle.sol";
+import "./EverestOracle/EverestStandardOracle.sol";
 
 contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStandardOracle {
     using SafeMath for uint256;
