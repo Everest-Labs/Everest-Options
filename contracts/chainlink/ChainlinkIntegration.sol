@@ -20,8 +20,11 @@ contract ChainlinkIntegration is Ownable {
     constructor() public {
         priceFeed = AggregatorV3Interface(0x5498BB86BC934c8D34FDA08E81D444153d0D06aD);
     }
-    
-    function getstartingprice() public view returns (int) {
+
+    /**
+     * Returns the latest price
+     */
+    function getLatestPrice() public view returns (int) {
         (
             uint80 roundID, 
             int price,
@@ -29,17 +32,7 @@ contract ChainlinkIntegration is Ownable {
             uint timeStamp,
             uint80 answeredInRound
         ) = priceFeed.latestRoundData();
-        price = latestprice;
         return price;
     }
-    
-    function Oracle_Consensus(bool FinalResult) public onlyOwner {
-        (
-            uint80 roundID, 
-            int price,
-            uint startedAt,
-            uint timeStamp,
-            uint80 answeredInRound
-        ) = priceFeed.latestRoundData();
-    }
 }
+
