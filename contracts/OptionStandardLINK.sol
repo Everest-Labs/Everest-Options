@@ -9,9 +9,10 @@ import "./standards/ERC20.sol";
 import "./standards/Ownable.sol";
 import "./chainlink/AggregatorV3Interface.sol";
 
-contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), ChainlinkIntegration {
+contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), Ownable {
     using SafeMath for uint256;
     IERC20 public token;
+    AggregatorV3Interface internal priceFeed;
     string private asset;
     string private expiry;
     address public Opposite;
@@ -31,6 +32,8 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), ChainlinkInte
         expiry = _expiry;
         OracleFee = _OracleFee;
         InitialBlock = block.timestamp;
+        // Fuji - AVAX/USD
+        priceFeed = AggregatorV3Interface(0x5498BB86BC934c8D34FDA08E81D444153d0D06aD);
         BurnAddress = 0x0000000000000000000000000000000000000000;
     }
 
