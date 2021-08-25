@@ -40,7 +40,7 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), Ownable {
     function deposit(uint256 _amount) public {
         uint256 totalToken = token.balanceOf(address(this));
         uint256 totalAmount = totalSupply();
-        if (totalAmount == 0 || totalToken == 0) {
+        if (totalAmount == 0 && _amount > 0) {
             (
                 uint80 roundID, 
                 int price,
