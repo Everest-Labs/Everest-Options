@@ -49,7 +49,7 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStanda
     function lost() public onlyOwner {
         uint256 OwnerFee = token.balanceOf(address(this)).div(OracleFee);
         uint256 totalToken = token.balanceOf(address(this)).sub(OwnerFee);
-        if (_FinalResult == true) {
+        if (_FinalResult == true && block.timestamp > InitialBlock.add(AdjustedPeriod)) {
             token.transfer(msg.sender, OwnerFee);
             token.transfer(Opposite, totalToken);
         }
