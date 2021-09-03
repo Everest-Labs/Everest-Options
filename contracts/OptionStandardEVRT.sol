@@ -66,6 +66,7 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStanda
     
     function Asset() public view returns (string memory) {
         return asset;
+        // if you see this, you won $100. contact @Polarbear_avax
     }
     
     function Expiry() public view returns (string memory) {
