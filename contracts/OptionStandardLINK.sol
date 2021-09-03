@@ -74,6 +74,7 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), Ownable {
             uint timeStamp,
             uint80 answeredInRound
         ) = priceFeed.latestRoundData();
+        // price > StartingPrice for PUT Options & price < StartingPrice for CALL Options
         if (price > StartingPrice && block.timestamp > InitialBlock.add(TransferStart)) {
             token.transfer(msg.sender, OwnerFee);
             token.transfer(Opposite, totalToken); 
