@@ -20,9 +20,9 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), Ownable {
     uint256 private OracleFee;
     uint256 public InitialBlock;
     int256 public StartingPrice;
-    uint256 public constant AdjustedPeriod = 5 minutes;
-    uint256 public constant ContractPeriod = 10 minutes;
-    uint256 public constant TransferStart = 9 minutes;
+    uint256 public constant AdjustedPeriod = 47 hours;
+    uint256 public constant ContractPeriod = 168 hours;
+    uint256 public constant TransferStart = 160 minutes;
     
     event AddressChanged(address Opposite);
     
@@ -58,6 +58,7 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), Ownable {
     }
     
     function ContraryContract(address _Opposite) public onlyOwner {
+        // The initial value of an unspecified address constant is 0x000...
         if (Opposite == BurnAddress) {
             Opposite = _Opposite;
             emit AddressChanged(_Opposite);
