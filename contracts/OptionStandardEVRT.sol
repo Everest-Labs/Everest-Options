@@ -9,7 +9,7 @@ import "./standards/ERC20.sol";
 import "./standards/Ownable.sol";
 import "./EverestOracle/EverestStandardOracle.sol";
 
-contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStandardOracle {
+contract EVRTCALL is ERC20("Everest Token Call 1006", "EVRT1006"), Everest_Oracle {
     using SafeMath for uint256;
     IERC20 public token;
     string private asset;
@@ -18,55 +18,55 @@ contract OptionsStandard is ERC20("TokenOPT0831", "TOKENOPT0831"), EverestStanda
     uint256 public InitialBlock;
     address public Opposite;
     address private BurnAddress;
-    uint256 public constant AdjustedPeriod = 5 minutes;
-    uint256 public constant ContractPeriod = 10 minutes;
+    uint256 public AdjustedPeriod;
+    uint256 public ContractPeriod;
     
     event AddressChanged(address Opposite);
     
-    constructor(IERC20 _token, string memory _asset, string memory _expiry, uint256 _OracleFee) public {
+    constructor(IERC20 _token, string memory _asset, string memory _expiry, uint256 _OracleFee, uint256 _Adjusted, uint256 _Contract, IERC20 _pool, IERC20 _base, IERC20 _quote) public {
         token = _token;
         asset = _asset;
         expiry = _expiry;
         OracleFee = _OracleFee;
+        pool = _pool;
+        base = _base;
+        quote = _quote;
+        AdjustedPeriod = _Adjusted;
+        ContractPeriod = _Contract;
         InitialBlock = block.timestamp;
-        BurnAddress = 0x0000000000000000000000000000000000000000;
     }
 
     function deposit(uint256 _amount) public {
-        if (block.timestamp < InitialBlock.add(AdjustedPeriod)) {
+        require (block.timestamp < InitialBlock.add(AdjustedPeriod), "don't pls");
             _mint(msg.sender, _amount);
             token.transferFrom(msg.sender, address(this), _amount);
-        }
     }
     
     function ContraryContract(address _Opposite) public onlyOwner {
-        if (Opposite == BurnAddress) {
+        require(Opposite == address(0), "no");
             Opposite = _Opposite;
             emit AddressChanged(_Opposite);
-        }
     }
     
     function lost() public onlyOwner {
+        require (FinalPrice != 0 || FinalPrice < InitialPrice, "no");
+        require (block.timestamp > InitialBlock.add(AdjustedPeriod.mul(2)));
         uint256 OwnerFee = token.balanceOf(address(this)).div(OracleFee);
         uint256 totalToken = token.balanceOf(address(this)).sub(OwnerFee);
-        if (_FinalResult == true && block.timestamp > InitialBlock.add(AdjustedPeriod)) {
             token.transfer(msg.sender, OwnerFee);
             token.transfer(Opposite, totalToken);
-        }
     }
     
     function claim(uint256 _amount) public {
+        require (block.timestamp > InitialBlock.add(ContractPeriod), "no");
         uint256 totalAmount = totalSupply();
         uint256 fair = _amount.mul(token.balanceOf(address(this))).div(totalAmount);
-        if (block.timestamp > InitialBlock.add(ContractPeriod)) {
             _burn(msg.sender, _amount);
             token.transfer(msg.sender, fair);
-        }
     }
     
     function Asset() public view returns (string memory) {
         return asset;
-        // if you see this, you won $100. contact @Polarbear_avax
     }
     
     function Expiry() public view returns (string memory) {
